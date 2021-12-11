@@ -236,8 +236,8 @@ void idCinematic::InitCinematic()
 #if defined(USE_FFMPEG)
 	// Carl: ffmpeg for Bink and regular video files
 	//common->Warning( "Loading FFMPEG...\n" );
-	avcodec_register_all();
-	av_register_all();
+	//avcodec_register_all();
+	//av_register_all();
 #endif
 
 	// Carl: Doom 3 ROQ:
