@@ -61,6 +61,8 @@ extern "C"
 //#endif
 
 #include <libavcodec/avcodec.h>
+#include <libavutil/avutil.h>
+#include <libavutil/imgutils.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 }
@@ -592,7 +594,7 @@ bool idCinematicLocal::InitFromFFMPEGFile( const char* qpath, bool amilooping )
 		return false;
 	}
 	video_stream_index = ret;
-	dec_ctx = fmt_ctx->streams[video_stream_index]->codec;
+	dec_ctx = fmt_ctx->streams[video_stream_index]->codecpar;
 	/* init the video decoder */
 	if( ( ret = avcodec_open2( dec_ctx, dec, NULL ) ) < 0 )
 	{
@@ -627,7 +629,7 @@ bool idCinematicLocal::InitFromFFMPEGFile( const char* qpath, bool amilooping )
 	framePos = -1;
 	common->Printf( "Loaded FFMPEG file: '%s', looping=%d%dx%d, %f FPS, %f sec\n", qpath, looping, CIN_WIDTH, CIN_HEIGHT, frameRate, durationSec );
 	image = ( byte* )Mem_Alloc( CIN_WIDTH * CIN_HEIGHT * 4 * 2, TAG_CINEMATIC );
-	avpicture_fill( ( AVPicture* )frame2, image, AV_PIX_FMT_BGR32, CIN_WIDTH, CIN_HEIGHT );
+	av_image_fill_arrays(frame2->data, frame2->linesize, image, AV_PIX_FMT_BGR32, CIN_WIDTH, CIN_HEIGHT, 1 );
 	if( img_convert_ctx )
 	{
 		sws_freeContext( img_convert_ctx );
